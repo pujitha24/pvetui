@@ -258,6 +258,36 @@ cli:
 	assert.Equal(t, "table", cfg.CLI.DefaultOutput)
 }
 
+func TestConfig_ConfirmQuit(t *testing.T) {
+	t.Run("defaults to true", func(t *testing.T) {
+		assert.True(t, NewConfig().ConfirmQuit)
+	})
+
+	t.Run("file can disable", func(t *testing.T) {
+		path := filepath.Join(t.TempDir(), "config.yaml")
+		require.NoError(t, os.WriteFile(path, []byte("confirm_quit: false\n"), 0o600))
+
+		cfg := NewConfig()
+		require.NoError(t, cfg.MergeWithFile(path))
+		assert.False(t, cfg.ConfirmQuit)
+	})
+
+	t.Run("omitted key keeps default", func(t *testing.T) {
+		path := filepath.Join(t.TempDir(), "config.yaml")
+		require.NoError(t, os.WriteFile(path, []byte("debug: false\n"), 0o600))
+
+		cfg := NewConfig()
+		require.NoError(t, cfg.MergeWithFile(path))
+		assert.True(t, cfg.ConfirmQuit)
+	})
+
+	t.Run("persisted on marshal", func(t *testing.T) {
+		data, err := yaml.Marshal(&Config{ConfirmQuit: false})
+		require.NoError(t, err)
+		assert.Contains(t, string(data), "confirm_quit: false")
+	})
+}
+
 func TestExpandHomePath(t *testing.T) {
 	home, err := os.UserHomeDir()
 	if err != nil || home == "" {

@@ -36,6 +36,7 @@
 //	debug: true
 //	cache_dir: "/custom/cache/path"  # Optional: overrides platform defaults
 //	show_icons: true  # Optional: show icons/emojis in UI (default: true)
+//	confirm_quit: true  # Optional: ask for confirmation before quitting (default: true)
 //
 // Platform Directory Support:
 //
@@ -122,6 +123,7 @@ type Config struct {
 	Plugins       PluginConfig                   `yaml:"plugins"`
 	CLI           CLIConfig                      `yaml:"cli,omitempty"`
 	ShowIcons     bool                           `yaml:"show_icons"`
+	ConfirmQuit   bool                           `yaml:"confirm_quit"`
 	GroupSettings map[string]GroupSettingsConfig `yaml:"group_settings,omitempty"`
 	// Deprecated: legacy single-profile fields for migration
 	Addr         string      `yaml:"addr"`
@@ -405,7 +407,8 @@ func NewConfig() *Config {
 		CLI: CLIConfig{
 			DefaultOutput: os.Getenv("PVETUI_CLI_DEFAULT_OUTPUT"),
 		},
-		ShowIcons: strings.ToLower(os.Getenv("PVETUI_SHOW_ICONS")) != "false",
+		ShowIcons:   strings.ToLower(os.Getenv("PVETUI_SHOW_ICONS")) != "false",
+		ConfirmQuit: true,
 	}
 	// Set default values for Realm and ApiPath only
 	if config.Realm == "" {
@@ -544,6 +547,7 @@ func (c *Config) MergeWithFile(path string) error {
 			DefaultOutput string `yaml:"default_output"`
 		} `yaml:"cli"`
 		ShowIcons     *bool                          `yaml:"show_icons"`
+		ConfirmQuit   *bool                          `yaml:"confirm_quit"`
 		GroupSettings map[string]GroupSettingsConfig `yaml:"group_settings"`
 		// Legacy fields for migration
 		Addr         string      `yaml:"addr"`
@@ -956,6 +960,11 @@ func (c *Config) MergeWithFile(path string) error {
 	// Merge show_icons configuration if provided
 	if fileConfig.ShowIcons != nil {
 		c.ShowIcons = *fileConfig.ShowIcons
+	}
+
+	// Merge confirm_quit configuration if provided (default: true)
+	if fileConfig.ConfirmQuit != nil {
+		c.ConfirmQuit = *fileConfig.ConfirmQuit
 	}
 
 	// Merge theme configuration if provided

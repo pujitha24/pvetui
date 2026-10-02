@@ -64,6 +64,7 @@ group_settings:
     mode: cluster   # active/passive failover
 debug: false
 show_icons: true               # Optional: toggle icons/emojis in the UI
+confirm_quit: true             # Optional: ask for confirmation before quitting (default: true)
 cache_dir: "/custom/cache/path"  # Optional: overrides platform defaults
 age_dir: "/custom/age/path"      # Optional: overrides where age keys are stored
 

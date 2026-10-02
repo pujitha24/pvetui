@@ -13,6 +13,7 @@ type marshaledConfig struct {
 	CLI            CLIConfig                      `yaml:"cli,omitempty"`
 	GroupSettings  map[string]GroupSettingsConfig `yaml:"group_settings,omitempty"`
 	ShowIcons      bool                           `yaml:"show_icons"`
+	ConfirmQuit    bool                           `yaml:"confirm_quit"`
 	Addr           string                         `yaml:"addr,omitempty"`
 	User           string                         `yaml:"user,omitempty"`
 	Password       string                         `yaml:"password,omitempty"`
@@ -47,6 +48,7 @@ func (cfg *Config) MarshalYAML() (any, error) {
 		CLI:            cfg.CLI,
 		GroupSettings:  cfg.GroupSettings,
 		ShowIcons:      cfg.ShowIcons,
+		ConfirmQuit:    cfg.ConfirmQuit,
 	}
 
 	if len(cfg.Profiles) == 0 {

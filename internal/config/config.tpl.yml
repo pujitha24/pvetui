@@ -22,6 +22,7 @@ default_profile: default
 
 debug: false
 show_icons: true
+confirm_quit: true  # Set to false to quit without the confirmation dialog
 # cache_dir: "/custom/cache/path"  # Optional: overrides platform defaults
 # age_dir: "/custom/age/path"      # Optional: overrides where age keys are stored
 
